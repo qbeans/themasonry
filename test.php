@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>The Masonry Seattle - Craft Beer and Woodfire Pizza</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<link href="css/bootstrap.css" rel="stylesheet">
+		<link href="css/main-styles.css" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet" type='text/css'>
+
+	</head>
+	<body>
+	
+	 <script>
+        //call our AJAX function on load (if you want to dynamically update menu without reload we can add some continuous calls to this as well)
+        window.onload = FetchMenu();
+    
+        var xmlHttp
+        var website
+        var menu
+
+        //this function inits our ajax var and sends the request to our php code.
+        function FetchMenu()
+        { 
+            xmlHttp=GetXmlHttpObject();
+            if (xmlHttp==null)
+            {
+               alert ("Your browser does not support AJAX!");
+               return;
+            } 
+            var url="FetchMenu.php";
+            url=url+"?sid="+Math.random(); //this line is needed to ensure we don't get cached results, it adds ?sid=####### to the url where #### is a random number
+            xmlHttp.onreadystatechange=stateChanged; //setting the callback function for when the AJAX call completes
+            xmlHttp.open("GET",url,true);
+            xmlHttp.send(null);
+        }
+
+        //this function is called by xmlHttp.onreadystatechange when our AJAX call to the php code completes
+        function stateChanged() 
+        { 
+            if (xmlHttp.readyState==4)
+            { 
+                
+                var json = xmlHttp.responseText;
+                menu = JSON && JSON.parse(json) || $.parseJSON(json);
+                
+               
+               //going to build up the rows/columns, with the top level group names being on their own, 
+               // and then the category titles being 2 line returns tall and items being 1 tall
+               //
+               // will take 1 group per row
+               //
+               
+               var itemCount;
+               var currentCount;               
+               var itemsPerColumn;
+               var groupTitle;
+               var text="";
+               var text2="";
+               var column = new Array();
+
+               //loop through all 3 levels Groups/Categories/items and build up the menu text
+                for( i=0; i < menu.menus.length; i++ )
+                {
+					
+                    itemCount = 0;
+                    itemsPerColumn = 0;
+                    currentCount=0; 
+                    
+                    groupTitle = menu.menus[i].name;
+                    column[0]="";
+                    column[1]="";
+                    column[2]="";
+                    var noValues = true;
+					var noValCount = 0;
+					if(groupTitle != 'Drafts'){continue;}
+					groupTitle = 'Tap List';
+                    // loop through the lower 2 levels and couont up number of "line returns" we will need. 
+                    // Counting the category lines twice as the <h4> is 2 lines high
+                    for( j=0; j < menu.menus[i].menu_categories.length; j++ )
+                    {
+						for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
+						{
+							//don't output blank line, check if empty
+							if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
+							{
+								noValues = false;
+								
+							}
+						}
+						if(!noValues)
+						{
+							itemCount+=2;
+							for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
+							{
+								if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
+								{
+									itemCount++;
+								}
+							}
+						}
+						else
+						{
+							noValCount++;
+						}
+                    }
+                    
+					//alert(groupTitle + " noValCount=" + noValCount + ", numCategories="+ menu.menus[i].menu_categories.length);
+					if(noValCount != menu.menus[i].menu_categories.length)
+					{
+						// to split across 3 columns we will div by 3
+						itemsPerColumn = (itemCount / 3);
+						
+						// now loop through lower two levels again and count along as you go, store the text added in one of three indexes in our column array
+						// get the floor of current position divided by itemsPerColumn to put in correct place
+						
+						for( j=0; j < menu.menus[i].menu_categories.length; j++ )
+						{
+							var noValues = true;
+							for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
+							{
+								//don't output blank line, check if empty
+								if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
+								{
+									noValues = false;
+								}
+							}
+						
+							if(menu.menus[i].menu_categories[j].menu_items.length > 0 && !noValues)
+							{
+								// To avoid the category title being the last element in a colum we do this check
+								if(Math.floor( currentCount / itemsPerColumn) < Math.floor( (currentCount+3) / itemsPerColumn) && itemsPerColumn > 3)
+								{
+									currentCount+=3;
+								}
+								
+								//change ".name" to .description here change output source for categories
+								column[ Math.floor( currentCount / itemsPerColumn) ] += "<h4>" + menu.menus[i].menu_categories[j].name + "</h4>";
+								currentCount++;
+								
+								for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
+								{
+									//don't output blank line, check if empty
+									if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
+									{
+										//change ".name" to .description here and above if wanting to change output source for items
+										column[ Math.floor( currentCount / itemsPerColumn) ] += menu.menus[i].menu_categories[j].menu_items[k].description + "<br>";
+									}
+									currentCount++;
+								}
+							}
+						}
+						
+						//take all the stuff we've gathered up and just flat output it
+						// we could store this groupTitle and columns in another var and out put later if we want to reorder things
+						
+						text += '<div class="row">\n';
+						text += '     <div class="col-lg-12">\n';
+						text += '         <h3>' + groupTitle + '</h3>\n';
+						text += '         <div class="col col-sm-4 col-lg-4">\n';
+						text += '            ' + column[0] + '\n';
+						text += '         </div>\n';
+						text += '         <div class="col-xs-6 col-sm-4">\n';
+						text += '            ' + column[1] + '\n';
+						text += '         </div>';
+						text += '         <div class="col-xs-6 col-sm-4">\n';
+						text += '            ' + column[2] + '\n';
+						text += '         </div>';
+						text += '     </div>';
+						text += ' </div><!--end row -->\n';
+					}
+                }
+                
+                //take the text string we built up and assign it to the div with id menu
+                document.getElementById("menu").innerHTML = text;
+            }
+        }
+        
+        //function to initialize AJAX
+        function GetXmlHttpObject()
+        {
+            var xmlHttp=null;
+            try
+            {
+                // Firefox, Opera 8.0+, Safari
+                xmlHttp=new XMLHttpRequest();
+            }
+            catch (e)
+            {
+                // Internet Explorer
+                try
+                {
+                    xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+                }
+                catch (e)
+                {
+                    xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            
+            return xmlHttp;
+        }
+    </script>
+	
+		<div id="wrap">
+			<div id="container">
+				<div class="navbar">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="index.html">Home</a></li>
+						<li><a href="menu.html">Menus</a></li>
+					</ul>
+				</div>
+
+					<div class="row">
+						<div class="col col-sm-12 col-lg-4">
+							<h1>The Masonry</h1>
+						</div>
+						<div class="col col-sm-12 col-lg-4">
+							<h2>Craft Beer, Fine Wine, and Woodfire Pizza</h2>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-sm-4 col-lg-4">
+							<center><img src="img/pizza.jpg" class="img-responsive" alt="The Masonry Pizza" /></center>
+						</div>
+						<div class="col col-sm-5 col-lg-5">
+							<h3>About</h3>
+							<p>Specializing in craft beer, wood-fired pizza, and hand selected wines. Come chat with our bartenders and watch our chefs at work. 14 beer taps, 2 cider taps, and 5 wine taps. Located in Uptown at 1st Ave. North and Roy St.</p>
+						</div>
+						<div class="col col-sm-3 col-lg-3">
+							<h3>Visit</h3>
+							<p>Open 7 days a week<br>
+							<strong>Lunch</strong> 11:30am - 2:00pm<br>
+							<strong>Snacks</strong> 2:00pm - 5:00pm<br>
+							<strong>Dinner</strong> 5:00pm - midnight<br>
+							<strong>Beer</strong> All day every day<br>
+							<em>Age 21+</em></p>
+
+							<address>
+								<strong>The Masonry</strong><br>
+								<a href="https://maps.google.com/maps?q=the+masonry&hl=en&ll=47.627512,-122.355015&spn=0.007534,0.011888&sll=47.625547,-122.355689&sspn=0.007535,0.011888&t=m&z=16&iwloc=A" target="_blank">20 Roy St.<br>
+								Seattle, WA 98109</a>
+							</address>
+						</div>
+					</div><!--end row -->
+					
+					<div id="menu">
+                        
+					</div>
+
+				</div>
+				<footer>
+					<div class="container">
+						<div class="pull-left">
+							<p>20 Roy St. Seattle, WA 98109<br>
+							(206) 453-4375<br>
+							<a href="mailto:info@themasonryseattle.com">info@themasonryseattle.com</a>
+						</p>
+						</div>
+						<div class="pull-right">
+							<p class="text-right">
+								Find us on:<br>
+								<a href="https://www.facebook.com/TheMasonryPizza" target="_blank">Facebook</a><br>
+								<a href="https://twitter.com/TheMasonryPizza" target="_blank">Twitter</a>
+							</p>
+						</div>
+					</div>
+				</footer>
+			</wrap>
+		</body>
+
+</html>
