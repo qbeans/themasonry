@@ -14,7 +14,7 @@
 				alert ("Your browser does not support AJAX!");
 				return;
 			} 
-			var url="FetchMenu.php";
+			var url="includes/fetch";
 			url=url+"?sid="+Math.random(); //this line is needed to ensure we don't get cached results, it adds ?sid=####### to the url where #### is a random number
 			xmlHttp.onreadystatechange=stateChanged; //setting the callback function for when the AJAX call completes
 			xmlHttp.open("GET",url,true);

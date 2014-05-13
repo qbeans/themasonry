@@ -47,7 +47,7 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<h4>For a full list of our bottled beers <a href="menu.html">visit our menu page</a>.</h4>
+							<h4>For a full list of our bottled beers <a href="menu">visit our menu page</a>.</h4>
 						</div>
 					</div>
 
