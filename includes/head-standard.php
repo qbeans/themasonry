@@ -7,10 +7,13 @@
 
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<link href="css/main-styles.css" rel="stylesheet">
+
 	<link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet" type='text/css'>
 
 </head>
 <body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
 	<script type="html/javascript">
 		//START GOOGLE ANALYTICS CODE
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
