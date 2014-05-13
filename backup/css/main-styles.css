@@ -1,5 +1,6 @@
 body{
 	background-color:#454545;
+	padding: 0 25px;
 }
 #wrap{
 	margin: 0 auto;
@@ -8,12 +9,9 @@ body{
 #container{
 	background-color:#eee;
 	border: 10px solid #393939;
+	padding:25px;
 }
-@media screen and (min-width: 768px) {
-	#container{
-		padding: 0 25px;
-	}
-}
+
 .navbar {
 	min-height: 40px;
 	padding-left: 0px;
