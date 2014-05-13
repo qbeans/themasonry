@@ -1,16 +1,16 @@
 <head>
-		<meta charset="utf-8">
-		<title>The Masonry Seattle - Craft Beer and Woodfire Pizza</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="">
-		<meta name="author" content="">
+	<meta charset="utf-8">
+	<title>The Masonry Seattle - Craft Beer and Woodfire Pizza</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-		<link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/main-styles.css" rel="stylesheet">
-		<link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet" type='text/css'>
+	<link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/main-styles.css" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet" type='text/css'>
 
-	</head>
-	<body>
+</head>
+<body>
 	<script type="html/javascript">
 		//START GOOGLE ANALYTICS CODE
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -2,8 +2,8 @@
 <html lang="en">
 
 	<?php
-		require('includes/head-standard.php');
-		include('includes/get-menu.php');
+		require 'includes/head-standard.php';
+		include 'includes/get-menu.php';
 	?>
 		<div id="wrap">
 			<div id="container">
@@ -52,7 +52,7 @@
 					</div>
 
 				</div>
-				<?php include('include/footer.php'); ?>
+				<?php include 'includes/footer.php'; ?>
 			</wrap>
 		</body>
 

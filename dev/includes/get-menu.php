@@ -1,5 +1,5 @@
-<script>
-		//call our AJAX function on load (if you want to dynamically update menu without reload we can add some continuous calls to this as well)
+<script type="text/javascript">
+	//call our AJAX function on load (if you want to dynamically update menu without reload we can add some continuous calls to this as well)
 		window.onload = FetchMenu();
 	
 		var xmlHttp
@@ -8,13 +8,11 @@
 
 
 		//this function inits our ajax var and sends the request to our php code.
-		function FetchMenu()
-		{ 
+		function FetchMenu(){ 
 			xmlHttp=GetXmlHttpObject();
-			if (xmlHttp==null)
-			{
-			   alert ("Your browser does not support AJAX!");
-			   return;
+			if (xmlHttp==null){
+				alert ("Your browser does not support AJAX!");
+				return;
 			} 
 			var url="FetchMenu.php";
 			url=url+"?sid="+Math.random(); //this line is needed to ensure we don't get cached results, it adds ?sid=####### to the url where #### is a random number
@@ -24,21 +22,17 @@
 		}
 
 		//this function is called by xmlHttp.onreadystatechange when our AJAX call to the php code completes
-		function stateChanged() 
-		{ 
-			if (xmlHttp.readyState==4)
-			{ 
+		function stateChanged(){ 
+			if (xmlHttp.readyState==4){ 
 				
 				var json = xmlHttp.responseText;
 				menu = JSON && JSON.parse(json) || $.parseJSON(json);
 				
-			   
-			   //going to build up the rows/columns, with the top level group names being on their own, 
-			   // and then the category titles being 2 line returns tall and items being 1 tall
-			   //
-			   // will take 1 group per row
-			   //
-			   
+			//going to build up the rows/columns, with the top level group names being on their own, 
+			// and then the category titles being 2 line returns tall and items being 1 tall
+			//
+			// will take 1 group per row
+					   
 			   var itemCount;
 			   var currentCount;               
 			   var itemsPerColumn;
@@ -46,10 +40,10 @@
 			   var text="";
 			   var text2="";
 			   var column = new Array();
+			   var currentPage = location.pathname;
 
 			   //loop through all 3 levels Groups/Categories/items and build up the menu text
-				for( i=0; i < menu.menus.length; i++ )
-				{
+				for( i=0; i < menu.menus.length; i++ ){
 					
 					itemCount = 0;
 					itemsPerColumn = 0;
@@ -61,64 +55,57 @@
 					column[2]="";
 					var noValues = true;
 					var noValCount = 0;
-					if(groupTitle != 'Drafts'){continue;}
-					groupTitle = 'Tap List';
+					if(!currentPage.match("/menu")){
+						if(groupTitle != 'Drafts'){continue;}
+					}
+					//groupTitle = 'Tap List';
+
 					// loop through the lower 2 levels and couont up number of "line returns" we will need. 
 					// Counting the category lines twice as the <h4> is 2 lines high
-					for( j=0; j < menu.menus[i].menu_categories.length; j++ )
-					{
-						for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
-						{
+					for( j=0; j < menu.menus[i].menu_categories.length; j++ ){
+						for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ ){
 							//don't output blank line, check if empty
 							if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
 							{
 								noValues = false;
-								
 							}
 						}
-						if(!noValues)
-						{
+						if(!noValues){
 							itemCount+=2;
-							for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
-							{
-								if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
+							for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ ){
+								 //change ".name" to .description here and below if wanting to change output source for items
+								if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null )
 								{
 									itemCount++;
 								}
 							}
 						}
-						else
-						{
+						else{
 							noValCount++;
 						}
 					}
 					
 					//alert(groupTitle + " noValCount=" + noValCount + ", numCategories="+ menu.menus[i].menu_categories.length);
-					if(noValCount != menu.menus[i].menu_categories.length)
-					{
+					if(noValCount != menu.menus[i].menu_categories.length){
 						// to split across 3 columns we will div by 3
 						itemsPerColumn = (itemCount / 3);
 						
 						// now loop through lower two levels again and count along as you go, store the text added in one of three indexes in our column array
 						// get the floor of current position divided by itemsPerColumn to put in correct place
 						
-						for( j=0; j < menu.menus[i].menu_categories.length; j++ )
-						{
+						for( j=0; j < menu.menus[i].menu_categories.length; j++ ){
 							var noValues = true;
-							for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ )
-							{
+							for( k=0; k < menu.menus[i].menu_categories[j].menu_items.length; k++ ){
 								//don't output blank line, check if empty
-								if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ) //change ".name" to .description here and below if wanting to change output source for items
-								{
+								//change ".name" to .description here and below if wanting to change output source for items
+								if( menu.menus[i].menu_categories[j].menu_items[k].description != "" && menu.menus[i].menu_categories[j].menu_items[k].description != null ){
 									noValues = false;
 								}
 							}
 						
-							if(menu.menus[i].menu_categories[j].menu_items.length > 0 && !noValues)
-							{
+							if(menu.menus[i].menu_categories[j].menu_items.length > 0 && !noValues){
 								// To avoid the category title being the last element in a colum we do this check
-								if(Math.floor( currentCount / itemsPerColumn) < Math.floor( (currentCount+3) / itemsPerColumn) && itemsPerColumn > 3)
-								{
+								if(Math.floor( currentCount / itemsPerColumn) < Math.floor( (currentCount+3) / itemsPerColumn) && itemsPerColumn > 3){
 									currentCount+=3;
 								}
 								
@@ -165,23 +152,18 @@
 		}
 		
 		//function to initialize AJAX
-		function GetXmlHttpObject()
-		{
+		function GetXmlHttpObject(){
 			var xmlHttp=null;
-			try
-			{
+			try{
 				// Firefox, Opera 8.0+, Safari
 				xmlHttp=new XMLHttpRequest();
 			}
-			catch (e)
-			{
+			catch (e){
 				// Internet Explorer
-				try
-				{
+				try{
 					xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
 				}
-				catch (e)
-				{
+				catch (e){
 					xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
 				}
 			}
