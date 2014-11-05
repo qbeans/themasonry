@@ -1,0 +1,23 @@
+//Mixins
+
+@mixin test {
+	@media (min-width: 801px) {
+
+	}
+	
+	@media (max-width: 800px) {
+
+	}
+
+	@media(max-width: 300px) {
+
+	}
+}
+
+@mixin clearfix {
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
